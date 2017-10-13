@@ -104,9 +104,17 @@ class MinMaxStack < MyStack
 end
 
 class MinMaxStackQueue < StackQueue
-  def initialize
+  def initialize(window)
+    @window = window
     @enqueue = MinMaxStack.new
     @dequeue = MinMaxStack.new
+  end
+
+  def enqueue(el)
+    super
+    if size > @window
+      dequeue
+    end
   end
 
   def dequeue
@@ -132,8 +140,8 @@ class MinMaxStackQueue < StackQueue
   def min
     return @enqueue.peek[:min] if @dequeue.empty?
     return @dequeue.peek[:min] if @enqueue.empty?
-    
-    if @dequeue.peek[:min] > @enqueue.peek[:min]
+
+    if @dequeue.peek[:min] < @enqueue.peek[:min]
       @dequeue.peek[:min]
     else
       @enqueue.peek[:min]
